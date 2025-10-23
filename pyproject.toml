@@ -1,7 +1,7 @@
 [project]
 name = "multistring-prompts"
 description = "This is a simple but powerful custom node for ComfyUI, designed to help you manage and sequence multiple prompts from a single, clean interface.\nIt's ideal for workflows like sequential video generation where you need to feed a series of different prompts into your model."
-version = "1.0.0"
+version = "1.0.2"
 license = {file = "LICENSE"} 
 # classifiers = [
 #     # For OS-independent nodes (works on all operating systems)
