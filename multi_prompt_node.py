@@ -13,25 +13,27 @@ class MultiStringPrompts:
                 "multi_prompt_3": ("STRING", {"multiline": True, "default": ""}),
                 "multi_prompt_4": ("STRING", {"multiline": True, "default": ""}),
                 "multi_prompt_5": ("STRING", {"multiline": True, "default": ""}),
+                "negative_prompt": ("STRING", {"multiline": True, "default": ""}),
             }
         }
         
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "STRING",)
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "*",)
     RETURN_NAMES = (
         "prompt_1", 
         "prompt_2", 
         "prompt_3", 
         "prompt_4", 
         "prompt_5", 
+        "negative_prompt", 
         "prompt_list",
     )
-    OUTPUT_IS_LIST = (False, False, False, False, False, True,)
+    OUTPUT_IS_LIST = (False, False, False, False, False, False, False,)
     FUNCTION = "process_prompts"
     CATEGORY = "MultiString Prompts" 
 
     def process_prompts(self, prefix, suffix, enable_prefix, enable_suffix, 
                           multi_prompt_1, multi_prompt_2, multi_prompt_3, 
-                          multi_prompt_4, multi_prompt_5):
+                          multi_prompt_4, multi_prompt_5, negative_prompt):
         
         def _process(prompt_text, prefix, suffix, enable_prefix, enable_suffix):
             
@@ -65,16 +67,19 @@ class MultiStringPrompts:
             multi_prompt_5
         ]
 
-        prompt_list_out = [
+        processed_prompts = [
             _process(p, prefix, suffix, enable_prefix, enable_suffix) for p in prompts_in
         ]
+        neg_prompt_out = _process(negative_prompt, prefix, suffix, enable_prefix, enable_suffix)
+        prompt_list_out = [p for p in processed_prompts if p and p.strip()]
 
         return (
-            prompt_list_out[0],
-            prompt_list_out[1],
-            prompt_list_out[2],
-            prompt_list_out[3],
-            prompt_list_out[4],
+            processed_prompts[0],
+            processed_prompts[1],
+            processed_prompts[2],
+            processed_prompts[3],
+            processed_prompts[4],
+            neg_prompt_out,
             prompt_list_out,
         )
 
