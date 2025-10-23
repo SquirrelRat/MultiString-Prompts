@@ -35,9 +35,6 @@ class MultiStringPromptsEncode:
     def _process(self, prompt_text, prefix, suffix, enable_prefix, enable_suffix):
         prompt_text = prompt_text.strip()
         
-        if not prompt_text:
-            return ""
-
         is_prefix_enabled = (enable_prefix == "true")
         is_suffix_enabled = (enable_suffix == "true")
 
@@ -48,7 +45,8 @@ class MultiStringPromptsEncode:
         if prefix_text:
             parts.append(prefix_text)
         
-        parts.append(prompt_text)
+        if prompt_text:
+            parts.append(prompt_text)
         
         if suffix_text:
             parts.append(suffix_text)
@@ -57,7 +55,9 @@ class MultiStringPromptsEncode:
 
     def _encode_prompt(self, clip, prompt):
         if not prompt:
-            prompt = ""
+            tokens = clip.tokenize("")
+            cond, pooled = clip.encode_from_tokens(tokens, return_pooled=True)
+            return [[cond, {"pooled_output": pooled}]]
             
         tokens = clip.tokenize(prompt)
         cond, pooled = clip.encode_from_tokens(tokens, return_pooled=True)
